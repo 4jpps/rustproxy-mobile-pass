@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+<g transform="translate(174 174) scale(0.66)">  
+  <!-- RustProxy mark, scaled from the 64x64 logo -->
+  <g transform="translate(152 152) scale(11.25)">
+    <polygon points="32,5 55,18.5 55,45.5 32,59 9,45.5 9,18.5" fill="#e2703a" stroke="#e2703a" stroke-width="4" stroke-linejoin="round"/>
+    <g fill="none" stroke="#0f1215" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 32H29"/><path d="M29 32L37 21H44"/><path d="M29 32H44"/><path d="M29 32L37 43H44"/>
+    </g>
+    <g fill="#0f1215"><circle cx="29" cy="32" r="4"/><circle cx="47.5" cy="21" r="3.5"/><circle cx="47.5" cy="32" r="3.5"/><circle cx="47.5" cy="43" r="3.5"/></g>
+  </g>
+  <!-- phone badge -->
+  <g transform="translate(676 600)">
+    <rect x="-18" y="-18" width="216" height="336" rx="52" fill="#0f1215"/>
+    <rect x="0" y="0" width="180" height="300" rx="38" fill="#f4efe9"/>
+    <rect x="18" y="34" width="144" height="210" rx="10" fill="#0f1215"/>
+    <circle cx="90" cy="270" r="13" fill="#0f1215"/>
+    <path d="M52 140 l26 26 l50 -56" fill="none" stroke="#e2703a" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</g>
+</svg>
