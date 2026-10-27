@@ -1,14 +1,27 @@
-// The check-in schedule while the switch is on: check in now, again every [checkEvery], and as soon
-// as the phone's network changes, so RustProxy only ever lets in the phone's current IP.
+// The check-in schedule while the switch is on: check in now, again well before the pass RustProxy
+// granted runs out, and as soon as the phone's network changes, so RustProxy only ever lets in the
+// phone's current IP. Frequent check-ins also catch a public IP that changes underneath the phone
+// (carrier NAT, a router's new WAN address) without any local network change.
 
 import 'dart:io';
 
 import 'pass_client.dart';
 
-/// Regular check-in interval; RustProxy keeps a pass for 10 minutes, so two chances per pass.
-const checkEvery = Duration(minutes: 4);
-/// How often the loop looks for a network change.
-const tick = Duration(seconds: 30);
+/// How often the loop looks for a network change and whether a check-in is due.
+const tick = Duration(seconds: 10);
+/// Check-ins happen three times per pass (RustProxy says how long each pass lasts), but never more
+/// often than every 20 s and never less often than every 4 minutes.
+const minCheckEvery = Duration(seconds: 20);
+const maxCheckEvery = Duration(minutes: 4);
+
+/// The check-in interval for a pass that lasts [expiresIn] seconds.
+Duration checkEveryFor(int expiresIn) {
+  if (expiresIn <= 0) return maxCheckEvery;
+  final third = Duration(seconds: expiresIn ~/ 3);
+  if (third < minCheckEvery) return minCheckEvery;
+  if (third > maxCheckEvery) return maxCheckEvery;
+  return third;
+}
 
 class PassStatus {
   final bool ok;
@@ -32,6 +45,9 @@ class PassLoop {
   final void Function(PassStatus) onStatus;
   PassConfig? _cfg;
   DateTime? _lastOk;
+  Duration _checkEvery = maxCheckEvery;
+  /// Seconds the last granted pass lasts, for "ends within" messages.
+  int lastExpiresIn = 0;
   String? _network;
 
   PassLoop(this.onStatus);
@@ -47,7 +63,7 @@ class PassLoop {
     final net = await networkFingerprint();
     final changed = net != _network;
     _network = net;
-    final due = _lastOk == null || DateTime.now().difference(_lastOk!) >= checkEvery;
+    final due = _lastOk == null || DateTime.now().difference(_lastOk!) >= _checkEvery;
     if (changed || due) await _checkIn();
   }
 
@@ -59,7 +75,15 @@ class PassLoop {
       return;
     }
     final r = await checkIn(cfg);
-    if (r.ok) _lastOk = DateTime.now();
+    if (r.ok) {
+      _lastOk = DateTime.now();
+      _checkEvery = checkEveryFor(r.expiresIn);
+      lastExpiresIn = r.expiresIn;
+    } else {
+      // A failed check-in (no network, server busy) is retried at the next tick, not after a full
+      // interval, so the pass isn't left to run out.
+      _lastOk = null;
+    }
     onStatus(PassStatus(ok: r.ok, ip: r.ip, error: r.error, at: DateTime.now()));
   }
 }

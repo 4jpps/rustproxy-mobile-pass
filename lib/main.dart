@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
         _on = false;
         _status = PassStatus(
           ok: false,
-          error: r == null || r.ok ? 'Off. This phone\'s pass has ended.' : 'Off here, but RustProxy could not be told (${r.error}); the pass ends by itself within 10 minutes.',
+          error: r == null || r.ok ? 'Off. This phone\'s pass has ended.' : 'Off here, but RustProxy could not be told (${r.error}); the pass ends by itself within about a minute and a half.',
           at: DateTime.now(),
         );
       });
@@ -226,8 +226,9 @@ class _HomePageState extends State<HomePage> {
   Widget _about() => const Padding(
         padding: EdgeInsets.symmetric(horizontal: 4),
         child: Text(
-          'Only this phone\'s current IP is let in. It checks in every few minutes and right after the network changes; '
-          'the previous network is dropped at once, and a pass that is not renewed ends within 10 minutes. '
+          'Only this phone\'s current IP is let in. It checks in about every half minute and right after the network changes; '
+          'the previous network is dropped at once. Turning the switch off ends the pass at once, and a phone that stops '
+          'checking in (offline, app closed) drops out within about a minute and a half. '
           'No history of addresses is kept on the phone or on RustProxy.',
           style: TextStyle(color: Colors.white54, fontSize: 13, height: 1.4),
         ),

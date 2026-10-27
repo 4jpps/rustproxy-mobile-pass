@@ -106,7 +106,7 @@ class PassService {
     return null;
   }
 
-  /// Stops checking in and signs the phone out, so its pass ends now rather than in 10 minutes.
+  /// Stops checking in and signs the phone out, so its pass ends now rather than when it expires.
   Future<CheckIn?> stop() async {
     if (usesForegroundService) {
       await FlutterForegroundTask.stopService();
