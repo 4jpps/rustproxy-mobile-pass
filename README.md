@@ -4,6 +4,8 @@
 
 Reach the sites you've locked to your own networks, from your phone, anywhere.
 
+Primary home: https://gitlab.jpps.us/jpps/rustproxy-mobile-pass (issues, merge requests and releases live there). The GitHub copy at https://github.com/4jpps/rustproxy-mobile-pass is a read-only mirror, updated automatically from GitLab.
+
 [RustProxy](https://gitlab.jpps.us/jpps/rust-proxy) can restrict a site to an **IP allow list**: only
 your home or office networks get in. That shuts you out too, the moment your phone is on cellular or
 hotel Wi-Fi. Mobile Pass is the way around it for your own phone, without opening the site to
